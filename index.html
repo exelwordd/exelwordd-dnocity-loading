@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДНО-СИТИ // Garry's Mod</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Фоновые меняющиеся скриншоты -->
+    <div id="slideshow-container" class="slideshow">
+        <div class="slide" style="background-image: url('assets/images/bg1.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/bg2.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/bg3.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/bg4.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/bg5.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/bg6.jpg');"></div>
+        <div class="slide" style="background-image: url('assets/images/bg7.jpg');"></div>
+    </div>
+    <script>
+        // Мгновенный выбор случайного скриншота ДО первой отрисовки страницы
+        (function() {
+            var slides = document.querySelectorAll('#slideshow-container .slide');
+            if (slides.length) {
+                var r = Math.floor(Math.random() * slides.length);
+                slides[r].classList.add('active');
+                window.__INITIAL_SLIDE__ = r;
+            }
+        })();
+    </script>
+
+    <!-- Мягкое затемнение для читаемости -->
+    <div class="overlay"></div>
+
+    <!-- Минималистичный центр: Логотип + Чистый тонкий прогресс-бар -->
+    <div class="center-stage">
+        
+        <!-- Логотип -->
+        <div class="logo-box">
+            <div class="logo-glow"></div>
+            <img src="assets/images/logo.png" alt="ДНО-СИТИ" class="main-logo">
+        </div>
+
+        <!-- Полоса загрузки без громоздких рамок -->
+        <div class="loader-box">
+            <div class="loader-meta">
+                <span class="loader-status" id="loading-status">ПОДКЛЮЧЕНИЕ К СЕРВЕРУ...</span>
+                <span class="loader-percent" id="loading-percent">0%</span>
+            </div>
+
+            <div class="loader-track">
+                <div class="loader-bar" id="progress-bar">
+                    <div class="loader-light"></div>
+                </div>
+            </div>
+
+            <div class="loader-sub">
+                <span class="loader-file" id="loading-file">Загрузка ресурсов...</span>
+                <span class="loader-count" id="loading-count"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Аккуратный минималистичный блок: Аватарка + SteamID + Онлайн (Слева снизу) -->
+    <div class="user-corner-badge">
+        <div class="user-avatar-wrap">
+            <img id="player-avatar" src="https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg" alt="Avatar">
+        </div>
+        <div class="user-meta-wrap">
+            <span class="user-steamid" id="player-steamid">STEAM_0:1:49204183</span>
+            <div class="user-online-row">
+                <span class="online-dot"></span>
+                <span class="online-text" id="server-online">24 / 64 игроков онлайн</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
