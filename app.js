@@ -122,7 +122,7 @@
 
     function updateOnlineDisplay() {
         if (dom.serverOnline) {
-            dom.serverOnline.textContent = `${currentPlayers} / ${maxSlots} игроков онлайн`;
+            dom.serverOnline.textContent = `Сервер онлайн • ${maxSlots} слота`;
         }
     }
 
@@ -147,26 +147,33 @@
         }
     }
 
-    // Загрузка реальной аватарки заходящего игрока из Steam
+    // Загрузка реальной аватарки заходящего игрока напрямую из Steam
     function fetchSteamAvatar(steam64) {
         if (!dom.playerAvatar) return;
 
-        // Публичный Steam XML профиля
-        const profileXmlUrl = `https://steamcommunity.com/profiles/${steam64}/?xml=1`;
-        
-        // Пробуем запросить через быстрый CORS-прокси
-        fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(profileXmlUrl)}`)
-            .then(res => res.text())
-            .then(xmlStr => {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlStr, "text/xml");
-                const avatarFull = xmlDoc.querySelector("avatarFull");
-                if (avatarFull && avatarFull.textContent) {
-                    dom.playerAvatar.src = avatarFull.textContent;
+        // 1. Прямой запрос к официальному JSON эндпоинту Steam Community (в GMod CEF работает напрямую)
+        fetch(`https://steamcommunity.com/actions/ajaxresolveusers?steamids=${steam64}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data[0] && data[0].avatar_url) {
+                    dom.playerAvatar.src = `https://avatars.steamstatic.com/${data[0].avatar_url}_full.jpg`;
+                } else {
+                    throw new Error("No avatar");
                 }
             })
             .catch(() => {
-                // Если нет интернета или ошибка CORS, аватарка остается аккуратной по умолчанию
+                // 2. Запасной прямой запрос к XML профиля
+                fetch(`https://steamcommunity.com/profiles/${steam64}/?xml=1`)
+                    .then(res => res.text())
+                    .then(xmlStr => {
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(xmlStr, "text/xml");
+                        const avatarFull = xmlDoc.querySelector("avatarFull");
+                        if (avatarFull && avatarFull.textContent) {
+                            dom.playerAvatar.src = avatarFull.textContent;
+                        }
+                    })
+                    .catch(() => {});
             });
     }
 
